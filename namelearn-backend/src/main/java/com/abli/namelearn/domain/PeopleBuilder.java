@@ -10,7 +10,7 @@ import java.util.List;
 public class PeopleBuilder {
 
     public static List<Person> getNames() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("people.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("namelearn-backend/src/main/resources/people.txt"))) {
             StringBuilder sb = new StringBuilder();
             String st;
             while ((st = reader.readLine()) != null) {
