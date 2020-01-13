@@ -10,9 +10,9 @@ class App extends Component {
   peopleFactory = new PeopleFactory();
   state = {
     hidden: true,
-    alternatives: [],
-    users: [], //correct?
-    user: Person
+    alternatives: [] as Person[],
+    users: [] as Person[], //correct?
+    user: {} as Person
   };
 
   //pass to this component
@@ -21,6 +21,11 @@ class App extends Component {
         .then(people => this.setState({
           users: people.map((person: any) => this.peopleFactory.formatPerson(person))
         }))
+        .then(() => {
+          if (this.state.users[0] === undefined) {
+            throw Error("Failed to load users");
+          }
+        })
         .then(() => this.newGame());
   }
 
@@ -66,15 +71,15 @@ class App extends Component {
 
   private displayButtons() {
     const alt = (this.state.alternatives as Person[]);
-    return (<div><button onClick={() => this.click(0)}>{alt[0].name}</button>
-            <button onClick={() => this.click(1)}>{alt[1].name}</button>
-            <button onClick={() => this.click(2)}>{alt[2].name}</button>
-            <button onClick={() => this.click(3)}>{alt[3].name}</button></div>);
+    return (<div><button onClick={() => this.click(0)}>{alt[0].fullname}</button>
+            <button onClick={() => this.click(1)}>{alt[1].fullname}</button>
+            <button onClick={() => this.click(2)}>{alt[2].fullname}</button>
+            <button onClick={() => this.click(3)}>{alt[3].fullname}</button></div>);
   }
 
   private click(index: number) {
-    console.log((this.state.alternatives[index] as Person).name + " - " + this.state.user.name);
-    if ((this.state.alternatives[index] as Person).name === this.state.user.name) {
+    console.log(this.state.alternatives[index].fullname + " - " + this.state.user.fullname);
+    if (this.state.alternatives[index].fullname === this.state.user.fullname) {
       console.log("correct");
       this.setState({hidden: false});
     } else {

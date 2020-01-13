@@ -96,7 +96,7 @@ public class WebScraperImpl implements WebScraper {
                     .department(department)
                     .location(location)
                     .position(position)
-                    .picSrc(picSrc)
+                    .src(picSrc)
                     .build();
         }
     }
@@ -108,7 +108,7 @@ public class WebScraperImpl implements WebScraper {
 
         DomNode userLogoLink = upperContainer.getChildNodes().get(1).getChildNodes().get(1);
         person.setInitial(userLogoLink.getAttributes().getNamedItem("data-username").getNodeValue());
-        person.setPicSrc(userLogoLink.getChildNodes().get(1).getAttributes().getNamedItem("src").getNodeValue());
+        person.setSrc(userLogoLink.getChildNodes().get(1).getAttributes().getNamedItem("src").getNodeValue());
         DomNode basicData = upperContainer.getChildNodes().get(3);
         person.setName(basicData.getChildNodes().get(1).getChildNodes().get(1).getChildNodes().get(1).getTextContent());
         person.setEmail(basicData.getChildNodes().get(3).getChildNodes().get(3).getChildNodes().get(1).getTextContent());

@@ -18,8 +18,8 @@ class PeopleFactory {
     }
 
     formatPerson(p: any) : Person {
-        return { name: p.name, email: p.email, initial: p.initial, manager: p.manager, phone: p.phone, department: p.department, location: p.location, position: p.position, picSrc: p.picsrc, id: p.id }
-        return { name: "p.name", email: "p.email", initial: "p.initial", manager: "p.manager", phone: "p.phone", department: "p.department", location: "p.location", position: "p.position", picSrc: "p.picsrc", id: "p.id" };
+        return { fullname: p.name, email: p.email, initial: p.initial, manager: p.manager, phone: p.phone, department: p.department, location: p.location, position: p.position, src: p.src, id: p.id };
+        return { fullname: "p.name", email: "p.email", initial: "p.initial", manager: "p.manager", phone: "p.phone", department: "p.department", location: "p.location", position: "p.position", src: "p.picsrc", id: "p.id" };
     }
 
     formatPeople(pList: any[]) : Person[] {

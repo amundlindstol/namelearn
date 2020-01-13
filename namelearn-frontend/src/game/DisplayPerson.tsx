@@ -3,7 +3,7 @@ import Person from "../domain/Person";
 
 class DisplayPerson extends Component {
     props = {
-        person: Person,
+        person: {} as Person,
         hidden: false
     };
     render() {
@@ -12,7 +12,7 @@ class DisplayPerson extends Component {
         return (
             <div>
                 <div className={hidden} >
-                    {this.props.person.name}
+                    {this.props.person.fullname}
                     {this.props.person.initial}
                 </div>
                 <div>Who is this?</div>

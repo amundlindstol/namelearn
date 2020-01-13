@@ -31,7 +31,7 @@ public class Person {
     private String location;
     private String position;
     //Picture
-    private String picSrc;
+    private String src;
 
     public String asJson() {
         try {

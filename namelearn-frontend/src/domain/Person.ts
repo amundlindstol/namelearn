@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-class Person {
+interface Person {
     id: string;
-    name: string;
+    fullname: string;
     email: string;
     initial: string;
     manager: string;
@@ -10,9 +10,8 @@ class Person {
     department: string;
     location: string;
     position: string;
-    picSrc: string;
-    static initial: string;
-    constructor(id: string, name: string, email: string, initial: string, manager: string, phone: string, department: string, location: string, position: string, picsrc: string) {
+    src: string;
+/*    constructor(id: string, name: string, email: string, initial: string, manager: string, phone: string, department: string, location: string, position: string, src: string) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -22,8 +21,8 @@ class Person {
         this.department = department;
         this.location = location;
         this.position = position;
-        this.picSrc = picsrc;
-    }
+        this.src = src;
+    }*/
 }
 
 export default Person;
