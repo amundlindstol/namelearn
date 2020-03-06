@@ -1,4 +1,4 @@
-package com.abli.namelearn.service;
+package com.abli.namelearn.connection;
 
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -12,27 +12,16 @@ import java.util.Objects;
 
 @Slf4j
 public class WebClientConnection {
-    private URL BASE_URL;
-    private final String J_SESSION_ID;
+    private final URL targetUrl;
+    private final String jSessionId;
     private WebClient client;
 
     public WebClientConnection(String baseUrl, String jSessionId) throws MalformedURLException {
-        this.BASE_URL = new URL(baseUrl);
-        this.J_SESSION_ID = jSessionId;
+        this.targetUrl = new URL(baseUrl);
+        this.jSessionId = jSessionId;
         setupConnection();
     }
 
-    public HtmlPage loadPage() {
-        HtmlPage page = null;
-        try {
-            page = client.getPage(BASE_URL);
-            client.waitForBackgroundJavaScript(10 * 1000);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        log.trace("StatusCode {}", Objects.requireNonNull(page).getWebResponse().getStatusCode());
-        return page;
-    }
     private void setupConnection() {
         client = new WebClient();
         client.getCookieManager().setCookiesEnabled(true);
@@ -40,9 +29,21 @@ public class WebClientConnection {
         client.getOptions().setCssEnabled(false);
         client.setAjaxController(new NicelyResynchronizingAjaxController());
         try {
-            client.addCookie(String.format("JSESSIONID=%s", J_SESSION_ID), new URL("https://wiki.intra.buypass.no/"), null);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            client.addCookie(String.format("JSESSIONID=%s", jSessionId), targetUrl, null);
+        } catch (Exception e) {
+            log.error(e.toString());
         }
+    }
+
+    public HtmlPage loadPage() {
+        HtmlPage page = null;
+        try {
+            page = client.getPage(targetUrl);
+            client.waitForBackgroundJavaScript(10 * 1000);
+        } catch (IOException e) {
+            log.error(e.toString());
+        }
+        log.trace("StatusCode {}", Objects.requireNonNull(page).getWebResponse().getStatusCode());
+        return page;
     }
 }
