@@ -1,29 +1,22 @@
 import React, { Component } from 'react';
 import Person from "./Person";
 
-class PeopleFactory {
+class Api {
 
-    getRandom() : Promise<Person> {
-        return fetch('http://localhost:6969/random')
-            .then(res => res.json())
-            .then(res => this.formatPerson(res))
-            .catch(err => { throw new Error(err)} )
-    }
-
-    getAll() : Promise<Person[]>{
-        return fetch('http://localhost:6969/all')
-            .then(res => res.json())
-            .then(res => res.map((person: any) => this.formatPerson(person)))
+    browse() {
+        return fetch('http://localhost:6969/find-root')
+            .then(res =>  res.json())
             .catch(err => { throw new Error(err) })
     }
 
-    formatPerson(p: any) : Person {
+
+    /*formatPerson(p: any) : Person {
         return { fullname: p.name, email: p.email, initial: p.initial, manager: p.manager, phone: p.phone, department: p.department, location: p.location, position: p.position, src: p.src, id: p.id };
         return { fullname: "p.name", email: "p.email", initial: "p.initial", manager: "p.manager", phone: "p.phone", department: "p.department", location: "p.location", position: "p.position", src: "p.picsrc", id: "p.id" };
-    }
+    }*/
 
-    formatPeople(pList: any[]) : Person[] {
-        let people: Person[] = [];
+    formatPeople(pList) {
+        let people = [];
         for (let i = 0; i < pList.length; i = i+1) {
 
         }
@@ -31,4 +24,4 @@ class PeopleFactory {
     }
 }
 
-export default PeopleFactory;
+export default Api;

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 
-interface Person {
-    id: string;
-    fullname: string;
-    email: string;
-    initial: string;
-    manager: string;
-    phone: string;
-    department: string;
-    location: string;
-    position: string;
-    src: string;
+class Person {
+    id;
+    fullname;
+    email;
+    initial;
+    manager;
+    phone;
+    department;
+    location;
+    position;
+    src;
 /*    constructor(id: string, name: string, email: string, initial: string, manager: string, phone: string, department: string, location: string, position: string, src: string) {
         this.id = id;
         this.name = name;

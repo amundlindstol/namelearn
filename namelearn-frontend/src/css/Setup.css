@@ -1,0 +1,29 @@
+
+.Setup {
+  text-align: center;
+  display: flex;
+  color: white;
+}
+
+.form {
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  padding: 2rem 4rem;
+}
+
+.form-inner {
+  padding: 5px;
+}
+
+.submit {
+  margin: 5px;
+}
+
+input {
+  border: 3px solid #282c34;
+}
+input[type=text]:focus {
+  border: 3px solid #30343ed1;
+  transition: 0.5s;
+}

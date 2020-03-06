@@ -1,25 +1,23 @@
 import React, {Component} from 'react';
-import './App.css';
-import PeopleFactory from "../domain/PeopleFactory";
-import Person from "../domain/Person";
+import '../css/App.css';
+import Api from "../domain/Api";
 import DisplayPerson from "./DisplayPerson";
-
 
 class App extends Component {
   // hidden = true;
-  peopleFactory = new PeopleFactory();
+  peopleFactory = new Api();
   state = {
     hidden: true,
-    alternatives: [] as Person[],
-    users: [] as Person[], //correct?
-    user: {} as Person
+    alternatives: [],
+    users: [], //correct?
+    user: {}
   };
 
   //pass to this component
-  componentDidMount(): void {
-    this.peopleFactory.getAll()
+  componentDidMount() {
+    this.peopleFactory.browse()
         .then(people => this.setState({
-          users: people.map((person: any) => this.peopleFactory.formatPerson(person))
+          users: people.map((person) => person)
         }))
         .then(() => {
           if (this.state.users[0] === undefined) {
@@ -27,16 +25,17 @@ class App extends Component {
           }
         })
         .then(() => this.newGame());
+    // new GetPictures().downloadAllImages();
   }
 
-  randomPerson(): Person {
+  randomPerson() {
     // @ts-ignore
     return this.state.users[Math.floor(Math.random() * this.state.users.length)];
   }
 
   newGame() {
     const newPerson = this.randomPerson();
-    let alternatives: Person[] = [];
+    let alternatives = [];
     alternatives.push(newPerson);
     alternatives.push(this.randomPerson());
     alternatives.push(this.randomPerson());
@@ -53,8 +52,6 @@ class App extends Component {
 
     let hidden = this.state.hidden;
     let a = <div>loading...</div>;
-    console.log(this.state.users);
-    console.log(this.state.alternatives);
     if (this.state.alternatives.length > 2) {
       a = this.displayButtons();
     }
@@ -69,15 +66,15 @@ class App extends Component {
     );
   }
 
-  private displayButtons() {
-    const alt = (this.state.alternatives as Person[]);
+  displayButtons() {
+    const alt = (this.state.alternatives);
     return (<div><button onClick={() => this.click(0)}>{alt[0].fullname}</button>
             <button onClick={() => this.click(1)}>{alt[1].fullname}</button>
             <button onClick={() => this.click(2)}>{alt[2].fullname}</button>
             <button onClick={() => this.click(3)}>{alt[3].fullname}</button></div>);
   }
 
-  private click(index: number) {
+  click(index) {
     console.log(this.state.alternatives[index].fullname + " - " + this.state.user.fullname);
     if (this.state.alternatives[index].fullname === this.state.user.fullname) {
       console.log("correct");
@@ -88,7 +85,7 @@ class App extends Component {
   }
 }
 
-function shuffleList(a: any[]) {
+function shuffleList(a) {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
