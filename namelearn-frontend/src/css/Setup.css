@@ -1,8 +1,14 @@
 
 .Setup {
-  text-align: center;
   display: flex;
+  flex-direction: column;
   color: white;
+}
+
+.form-outer {
+  max-width: 20vw;
+  font-size: 1vw;
+  text-align: start;
 }
 
 .form {
@@ -10,6 +16,7 @@
   align-content: center;
   flex-direction: row;
   padding: 2rem 4rem;
+  text-align: center;
 }
 
 .form-inner {

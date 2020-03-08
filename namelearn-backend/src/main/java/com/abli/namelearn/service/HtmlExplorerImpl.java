@@ -23,6 +23,7 @@ public class HtmlExplorerImpl implements HtmlExplorer {
 
     @Override
     public List<HtmlElement> findRoot(GetRoot request, HtmlPage mainPage) {
+        System.out.println(request.getXPath() + "\n" + siteDigger.findRootElements(request, mainPage));
         return siteDigger.findRootElements(request, mainPage);
     }
 
@@ -33,7 +34,10 @@ public class HtmlExplorerImpl implements HtmlExplorer {
 
     @Override
     public String findElementValue(GetElementValue request, List<HtmlElement> rootElements) {
-        return siteDigger.findValueInElement(request, rootElements.get(0));
+        System.out.println(request.toString());
+        String s = siteDigger.findValueInElement(request, findElement(request.getXPath(), rootElements).get(0));
+        System.out.println(s);
+        return s;
     }
 
 

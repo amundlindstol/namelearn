@@ -1,27 +1,84 @@
-import React, { Component } from 'react';
-import Person from "./Person";
-
 class Api {
 
-    browse() {
-        return fetch('http://localhost:6969/find-root')
-            .then(res =>  res.json())
-            .catch(err => { throw new Error(err) })
-    }
+    browse = (path) => {
+        let b = {
+            "path" : path,
+            "sug_meg" : "b"
+        };
+        return fetch('http://localhost:6969/find-element', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(b)
+            })
+            .then(res => {
+                if(!res.ok) {
+                    return res.json().then(text => "Invalid Path")
+                }
+                else {
+                    return res.text();
+                }
+            })
+            .catch(err => err);
+    };
 
+    root = (state) => {
+        let b = {
+            "path" : state.path,
+            "attribute_name" : state.attributeName,
+            "attribute_value" : state.attributeValue
+        };
+        return fetch('http://localhost:6969/find-root', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(b)
+            })
+            .then(res => res.text())
+            .catch(err => err.text());
+    };
 
-    /*formatPerson(p: any) : Person {
-        return { fullname: p.name, email: p.email, initial: p.initial, manager: p.manager, phone: p.phone, department: p.department, location: p.location, position: p.position, src: p.src, id: p.id };
-        return { fullname: "p.name", email: "p.email", initial: "p.initial", manager: "p.manager", phone: "p.phone", department: "p.department", location: "p.location", position: "p.position", src: "p.picsrc", id: "p.id" };
-    }*/
+    select = (state) => {
+        let b = {
+            "name" : state.name,
+            "path" : state.path,
+            "attribute_name" : state.attributeName,
+            "attribute_value" : state.attributeValue,
+            "select_attribute" : state.selectAttribute
 
-    formatPeople(pList) {
-        let people = [];
-        for (let i = 0; i < pList.length; i = i+1) {
+        };
+        return fetch('http://localhost:6969/find-element-value', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(b)
+        })
+            .then(res => {
+                if(!res.ok) {
+                    return res.json().then(text => console.log(text.message))
+                }
+                else {
+                    return res.text();
+                }
+            })
+            .catch(err => err);
+    };
 
-        }
-        return people;
-    }
+    build = (instructionList) => {
+        var body = {};
+        return fetch('http://localhost:6969/build-people', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify("b")
+        })
+            .then(res => {
+                if(!res.ok) {
+                    return res.json().then(text => console.log(text.message))
+                }
+                else {
+                    return res.json().then(r => console.log(r));
+                }
+            })
+            .catch(err => err);
+    };
+
 }
 
 export default Api;

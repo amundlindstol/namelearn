@@ -3,9 +3,13 @@ import '../css/Setup.css';
 import InnerForm from "./InnerForm";
 import Api from "../domain/Api";
 
-class Browser extends Component {
+class Select extends Component {
     state = {
-        path: '//div',
+        name: 'name',
+        path: '//div//div//div//span',
+        attributeName: 'class',
+        attributeValue: 'profile-username',
+        selectAttribute: 'title',
         result: 'nothing'
     };
     constructor(props) {
@@ -16,7 +20,7 @@ class Browser extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.api.browse(this.state.path).then(res => this.setState({result: res})).catch(err => this.setState({result: err}));
+        this.api.select(this.state).then(res => this.setState({result: res})).catch(err => this.setState({result: err}));
     };
 
     callBack = (formData) => {
@@ -27,7 +31,9 @@ class Browser extends Component {
         return (
             <div className={"form-outer"}>
                 <div className={"form"}>
-                    <InnerForm callBack={this.callBack} text={"xPath"} />
+                    <InnerForm callBack={this.callBack} text={"path"} />
+                    <InnerForm text={"attribute name"} />
+                    <InnerForm text={"attribute value"} />
                     <input className={"submit"} type="submit" value="Submit" onClick={this.handleSubmit} />
                 </div>
                 <pre>
@@ -37,4 +43,4 @@ class Browser extends Component {
         );
     }
 }
-export default Browser;
+export default Select;

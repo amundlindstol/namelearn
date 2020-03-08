@@ -43,8 +43,8 @@ public class SiteDiggerImpl implements SiteDigger {
 
     @Override
     public String findValueInElement(GetElementValue req, HtmlElement e) {
-        if (req.getSelectName() != null && e.hasAttribute(req.getSelectName())) {
-            return e.getAttribute(req.getSelectName());
+        if (req.getSelectAttribute() != null && e.hasAttribute(req.getSelectAttribute())) {
+            return e.getAttribute(req.getSelectAttribute());
         }
         return e.getNodeValue();
     }

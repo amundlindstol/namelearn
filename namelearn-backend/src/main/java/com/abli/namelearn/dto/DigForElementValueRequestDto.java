@@ -22,7 +22,7 @@ public class DigForElementValueRequestDto {
     @ApiModelProperty(example = "profile-username")
     private String attributeValue;
     @ApiModelProperty(example = "title")
-    private String selectName;
+    private String selectAttribute;
 
     public GetElementValue mapToDomain() {
         return GetElementValue.builder()
@@ -30,7 +30,7 @@ public class DigForElementValueRequestDto {
                 .xPath(path)
                 .attributeName(attributeName)
                 .attributeValue(attributeValue)
-                .selectName(selectName)
+                .selectAttribute(selectAttribute)
                 .build();
     }
 }

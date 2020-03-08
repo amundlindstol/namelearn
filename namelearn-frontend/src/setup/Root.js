@@ -3,9 +3,11 @@ import '../css/Setup.css';
 import InnerForm from "./InnerForm";
 import Api from "../domain/Api";
 
-class Browser extends Component {
+class Root extends Component {
     state = {
         path: '//div',
+        attributeName: 'class',
+        attributeValue: 'profile-entry',
         result: 'nothing'
     };
     constructor(props) {
@@ -16,12 +18,17 @@ class Browser extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.api.browse(this.state.path).then(res => this.setState({result: res})).catch(err => this.setState({result: err}));
+        this.api.root(this.state).then(res => this.setState({result: res})).catch(err => this.setState({result: err}));
     };
 
     callBack = (formData) => {
         this.setState({path: formData});
     };
+
+    //todo remove
+    componentDidMount() {
+        this.api.root(this.state).then(res => this.setState({result : res}));
+    }
 
     render() {
         return (
@@ -37,4 +44,4 @@ class Browser extends Component {
         );
     }
 }
-export default Browser;
+export default Root;

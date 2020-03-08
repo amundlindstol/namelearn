@@ -14,9 +14,7 @@ import com.gargoylesoftware.htmlunit.html.HTMLParser;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +29,6 @@ import java.util.List;
 public class Controller {
     private final WebScraper webScraper;
     private final HtmlExplorer explorer;
-    HttpHeaders headers = new HttpHeaders();
     private HtmlPage MAIN_PAGE = loadStaticSite();
 
     private List<HtmlElement> ROOT;
@@ -41,39 +38,38 @@ public class Controller {
                       HtmlExplorer explorer) {
         this.webScraper = webScraper;
         this.explorer = explorer;
-        headers.add("Access-Control-Allow-Origin", "*");
     }
 
-    @PostMapping("/update")
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> updateSite(String baseUrl, String jSessionId) {
         HtmlPage page = webScraper.getPage(baseUrl, jSessionId);
         if (page != null) {
             MAIN_PAGE = page;
-            return new ResponseEntity<>(true, headers, HttpStatus.OK);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         }
-        return ResponseEntity.badRequest().headers(headers).body(false);
+        return ResponseEntity.badRequest().body(false);
     }
 
-    @PostMapping("/find-root")
-    public String getRootElement(@RequestBody DigForRootRequestDto request) {
+    @PostMapping(value = "/find-root", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getRootElement(@RequestBody DigForRootRequestDto request) {
         List<HtmlElement> rootEntries = explorer.findRoot(request.mapToDomain(), MAIN_PAGE);
         this.ROOT = rootEntries;
-        return ResponseFormatter.fromNodes(rootEntries);
+        return new ResponseEntity<>(ResponseFormatter.fromNodes(rootEntries), HttpStatus.OK);
     }
 
-    @PostMapping("/find-element")
-    public String getElement(@RequestBody DigForElementRequestDto request) {
-        return ResponseFormatter.fromNodes(explorer.findElement(request.getPath(), ROOT));
+    @PostMapping(value = "/find-element", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getElement(@RequestBody DigForElementRequestDto request) {
+        return new ResponseEntity<>(ResponseFormatter.fromNodes(explorer.findElement(request.getPath(), ROOT)), HttpStatus.OK);
     }
 
-    @PostMapping("/find-element-value")
-    public String getElementValue(DigForElementValueRequestDto request) {
-        return explorer.findElementValue(request.mapToDomain(), ROOT);
+    @PostMapping(value = "/find-element-value", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> getElementValue(@RequestBody DigForElementValueRequestDto request) {
+        return new ResponseEntity<>(explorer.findElementValue(request.mapToDomain(), ROOT), HttpStatus.OK);
     }
 
-    @PostMapping("/build-people")
-    public List<Person> buildPeople(@RequestBody BuildPeopleRequestDto request) {
-        return explorer.buildPeople(request.mapToDomain(), ROOT);
+    @PostMapping(value = "/build-people", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Person>> buildPeople(@RequestBody BuildPeopleRequestDto request) {
+        return new ResponseEntity<>(explorer.buildPeople(request.mapToDomain(), ROOT), HttpStatus.OK);
     }
 
     private HtmlPage loadStaticSite() {
