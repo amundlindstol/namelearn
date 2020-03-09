@@ -5,9 +5,10 @@ import Api from "../domain/Api";
 
 class Root extends Component {
     state = {
-        path: '//div',
-        attributeName: 'class',
-        attributeValue: 'profile-entry',
+        path: '',
+        attributeName: '',
+        attributeValue: '',
+        relativePath: '',
         result: 'nothing'
     };
     constructor(props) {
@@ -18,26 +19,39 @@ class Root extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.api.root(this.state).then(res => this.setState({result: res})).catch(err => this.setState({result: err}));
+        this.api.root(this.state).then(res => this.setState({result: res.result, relativePath: res.relative_path}))
+            .catch(err => this.setState({result: err}));
     };
 
-    callBack = (formData) => {
-        this.setState({path: formData});
+    callBack = (formData, type) => {
+        switch (type) {
+            case "path" :
+                this.setState({path : formData}); break;
+            case "attribute name" :
+                this.setState({attributeName: formData}); break;
+            case "attribute value" :
+                this.setState({attributeValue: formData}); break;
+            default:
+                console.error("Form type not found: " + type);
+        }
     };
 
     //todo remove
     componentDidMount() {
-        this.api.root(this.state).then(res => this.setState({result : res}));
+        this.api.root(this.state).then(res => this.setState({result: res.result, relativePath: res.relative_path}));
     }
 
     render() {
         return (
             <div className={"form-outer"}>
-                <div className={"form"}>
-                    <InnerForm callBack={this.callBack} text={"xPath"} />
-                    <input className={"submit"} type="submit" value="Submit" onClick={this.handleSubmit} />
-                </div>
+                <form className={"form"}>
+                    <InnerForm callBack={this.callBack} text={"path"} />
+                    <InnerForm callBack={this.callBack} text={"attribute name"} />
+                    <InnerForm callBack={this.callBack} text={"attribute value"} />
+                    <button className={"submit"} type={"submit"} onClick={this.handleSubmit}>set root</button>
+                </form>
                 <pre>
+                    {"root path: " + this.state.relativePath + "\n"}
                     {this.state.result}
                 </pre>
             </div>

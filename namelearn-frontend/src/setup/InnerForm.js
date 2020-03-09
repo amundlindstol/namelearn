@@ -4,19 +4,19 @@ import '../css/Setup.css';
 class InnerForm extends Component {
 
     handleChange = (event) => {
-        this.setState({path: event.target.value});
-        this.props.callBack(event.target.value);
+        this.setState({value: event.target.value});
+        this.props.callBack(event.target.value, this.props.text);
     };
 
     render() {
         return (
-            <form className="form-inner">
+            <div className="form-inner">
                 <label>
                     {this.props.text}
                     <br/>
                     <input type="text" onChange={this.handleChange} />
                 </label>
-            </form>
+            </div>
         );
     }
 }

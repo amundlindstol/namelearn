@@ -1,10 +1,8 @@
 package com.abli.namelearn.controller;
 
+import com.abli.namelearn.domain.HtmlResponse;
 import com.abli.namelearn.domain.Person;
-import com.abli.namelearn.dto.BuildPeopleRequestDto;
-import com.abli.namelearn.dto.DigForElementRequestDto;
-import com.abli.namelearn.dto.DigForElementValueRequestDto;
-import com.abli.namelearn.dto.DigForRootRequestDto;
+import com.abli.namelearn.dto.*;
 import com.abli.namelearn.connection.WebScraper;
 import com.abli.namelearn.service.ResponseFormatter;
 import com.abli.namelearn.service.HtmlExplorer;
@@ -31,8 +29,6 @@ public class Controller {
     private final HtmlExplorer explorer;
     private HtmlPage MAIN_PAGE = loadStaticSite();
 
-    private List<HtmlElement> ROOT;
-
     @Autowired
     public Controller(WebScraper webScraper,
                       HtmlExplorer explorer) {
@@ -40,9 +36,9 @@ public class Controller {
         this.explorer = explorer;
     }
 
-    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> updateSite(String baseUrl, String jSessionId) {
-        HtmlPage page = webScraper.getPage(baseUrl, jSessionId);
+    @PostMapping(value = "/connect", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> updateSite(@RequestBody ConnectRequestDto request) {
+        HtmlPage page = webScraper.getPage(request.mapToDomain());
         if (page != null) {
             MAIN_PAGE = page;
             return new ResponseEntity<>(true, HttpStatus.OK);
@@ -50,26 +46,31 @@ public class Controller {
         return ResponseEntity.badRequest().body(false);
     }
 
-    @PostMapping(value = "/find-root", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> getRootElement(@RequestBody DigForRootRequestDto request) {
-        List<HtmlElement> rootEntries = explorer.findRoot(request.mapToDomain(), MAIN_PAGE);
-        this.ROOT = rootEntries;
-        return new ResponseEntity<>(ResponseFormatter.fromNodes(rootEntries), HttpStatus.OK);
+    @PostMapping(value = "/find-root", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HtmlResponseDto> getRootElement(@RequestBody DigForRootRequestDto request) {
+        HtmlResponse rootEntries = explorer.findRoot(request.mapToDomain(), MAIN_PAGE);
+        return new ResponseEntity<>(rootEntries.fromDomain(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/find-element", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> getElement(@RequestBody DigForElementRequestDto request) {
-        return new ResponseEntity<>(ResponseFormatter.fromNodes(explorer.findElement(request.getPath(), ROOT)), HttpStatus.OK);
+    @PostMapping(value = "/find-element", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<HtmlResponseDto> getElement(@RequestBody DigForElementRequestDto request) {
+        HtmlResponse response = explorer.findElement(request.mapToDomain());
+        return new ResponseEntity<>(response.fromDomain(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/find-element-value", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> getElementValue(@RequestBody DigForElementValueRequestDto request) {
-        return new ResponseEntity<>(explorer.findElementValue(request.mapToDomain(), ROOT), HttpStatus.OK);
+        return new ResponseEntity<>(explorer.findElementValue(request.mapToDomain()), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/find-image")
+    public ResponseEntity<byte[]> getPicture(@RequestBody DigForImageDto request) {
+        return new ResponseEntity<>(explorer.getImageStream(request.mapToDomain(webScraper.getJSessionId())), HttpStatus.OK);
     }
 
     @PostMapping(value = "/build-people", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Person>> buildPeople(@RequestBody BuildPeopleRequestDto request) {
-        return new ResponseEntity<>(explorer.buildPeople(request.mapToDomain(), ROOT), HttpStatus.OK);
+        return new ResponseEntity<>(explorer.buildPeople(request.mapToDomain(webScraper.getJSessionId())), HttpStatus.OK);
     }
 
     private HtmlPage loadStaticSite() {

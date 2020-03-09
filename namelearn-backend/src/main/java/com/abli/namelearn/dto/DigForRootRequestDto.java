@@ -1,5 +1,6 @@
 package com.abli.namelearn.dto;
 
+import com.abli.namelearn.domain.GetElement;
 import com.abli.namelearn.domain.GetRoot;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -24,8 +25,8 @@ public class DigForRootRequestDto {
     private String attributeValue;
 
     @JsonIgnore
-    public GetRoot mapToDomain() {
-        return GetRoot.builder()
+    public GetElement mapToDomain() {
+        return GetElement.builder()
                 .xPath(path)
                 .attributeName(attributeName)
                 .attributeValue(attributeValue)

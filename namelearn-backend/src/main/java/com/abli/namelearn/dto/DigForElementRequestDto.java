@@ -16,14 +16,19 @@ import lombok.ToString;
 @EqualsAndHashCode
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class DigForElementRequestDto {
-    @ApiModelProperty("//div")
+    @ApiModelProperty(example = "//div//div//div//span")
     private String path;
-    private String sugMeg;
+    @ApiModelProperty(example = "class")
+    private String attributeName;
+    @ApiModelProperty(example = "profile-username")
+    private String attributeValue;
 
     @JsonIgnore
     public GetElement mapToDomain() {
         return GetElement.builder()
                 .xPath(path)
+                .attributeName(attributeName)
+                .attributeValue(attributeValue)
                 .build();
     }
 }

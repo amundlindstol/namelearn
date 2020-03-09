@@ -1,5 +1,6 @@
 package com.abli.namelearn.dto;
 
+import com.abli.namelearn.domain.BuildPeopleRequest;
 import com.abli.namelearn.domain.GetElementValue;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -15,11 +16,16 @@ import java.util.List;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class BuildPeopleRequestDto {
+    private String srcPrefix;
     private List<DigForElementValueRequestDto> instructionList;
 
-    public List<GetElementValue> mapToDomain() {
+    public BuildPeopleRequest mapToDomain(String jSessionId) {
         List<GetElementValue> l = new ArrayList<>();
         instructionList.forEach(instruction -> l.add(instruction.mapToDomain()));
-        return l;
+        return BuildPeopleRequest.builder()
+                .srcPrefix(srcPrefix)
+                .jSessionId(jSessionId)
+                .instructionList(l)
+                .build();
     }
 }

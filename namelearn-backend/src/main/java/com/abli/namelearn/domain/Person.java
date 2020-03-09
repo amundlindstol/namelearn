@@ -12,5 +12,6 @@ import java.util.Map;
 @AllArgsConstructor
 @JsonIgnoreProperties
 public class Person {
+    private byte[] picture;
     private Map<String, String> attributes;
 }
