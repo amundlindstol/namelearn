@@ -82,9 +82,11 @@ class Api {
             .catch(err => err);
     };
 
-    build = (instructionList) => {
+    build = (state) => {
         let body = {
-            "instruction_list": this.buildList(instructionList)
+            "src_prefix": state.src_prefix,
+            "j_session_id": state.j_session_id,
+            "instruction_list": this.buildList(state.instruction_list)
         };
         return fetch('http://localhost:6969/build-people', {
             method: 'POST',

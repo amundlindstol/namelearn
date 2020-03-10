@@ -5,7 +5,7 @@ import Api from "../domain/Api";
 
 class Root extends Component {
     state = {
-        path: '',
+        path: '/html/body/div[2]/div',
         attributeName: '',
         attributeValue: '',
         relativePath: '',

@@ -63,7 +63,7 @@ public class HtmlExplorerImpl implements HtmlExplorer {
             });
             Person person = Person.builder().attributes(attributes).build();
             if (attributes.containsKey("image")) {
-                person.setPicture(getImageStream(GetImage.builder().src(attributes.get("image")).jSessionId(request.getJSessionId()).build()));
+                person.setPicture(getImageStream(GetImage.builder().src(request.getSrcPrefix()+attributes.get("image")).jSessionId(request.getJSessionId()).build()));
             }
             people.add(person);
         });

@@ -4,12 +4,10 @@ import com.abli.namelearn.domain.HtmlResponse;
 import com.abli.namelearn.domain.Person;
 import com.abli.namelearn.dto.*;
 import com.abli.namelearn.connection.WebScraper;
-import com.abli.namelearn.service.ResponseFormatter;
 import com.abli.namelearn.service.HtmlExplorer;
 import com.gargoylesoftware.htmlunit.StringWebResponse;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HTMLParser;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -70,7 +68,9 @@ public class Controller {
 
     @PostMapping(value = "/build-people", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Person>> buildPeople(@RequestBody BuildPeopleRequestDto request) {
-        return new ResponseEntity<>(explorer.buildPeople(request.mapToDomain(webScraper.getJSessionId())), HttpStatus.OK);
+        return new ResponseEntity<>(explorer.buildPeople(request.mapToDomain(request.getJSessionId() != null ? //todo remove when testing ok
+                request.getJSessionId() :
+                webScraper.getJSessionId())), HttpStatus.OK);
     }
 
     private HtmlPage loadStaticSite() {

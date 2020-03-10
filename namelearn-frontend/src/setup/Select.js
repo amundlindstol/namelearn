@@ -12,7 +12,7 @@ class Select extends Component {
         if (props.isDefault !== undefined) {
             this.state = {
                 name: 'name',
-                path: '/div/div/div/span',
+                path: '/div/div',
                 attributeName: 'class',
                 attributeValue: 'profile-username',
                 selectAttribute: 'title',

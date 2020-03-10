@@ -14,13 +14,23 @@ class Setup extends Component {
         this.state = {
             selector_components: [],
             people : [],
+            src_prefix: '',
+            j_session_id: '',
             instruction_list: [{
-                name: 'name',
-                path: '/div/div/div/div/span',
-                attributeName: 'class',
-                attributeValue: 'profile-username',
-                selectAttribute: 'title'
-            }]
+                    name: 'name',
+                    path: '/div',
+                    attributeName: 'class',
+                    attributeValue: 'profile-username',
+                    selectAttribute: 'title'
+                },
+                {
+                    name: 'image',
+                    path: '/img',
+                    attributeName: 'class',
+                    attributeValue: 'userLogo logo',
+                    selectAttribute: 'src'
+                }
+            ]
         };
         this.state.selector_components.push(<Select isDefault={true}/>);
     }
@@ -37,8 +47,14 @@ class Setup extends Component {
                     {selector_components.length !== 0 && selector_components.map((s, i) => <Select key={i} callBack={this.callbackInstructions}/>)}
                     <input className={"submit"} type="submit" value="+" onClick={this.addSelect} />
                     <input className={"submit"} type="submit" value="Bake" onClick={this.buildPeople} />
+
                     {this.state.people.map((person, i) => {
-                        return <pre key={i}>{JSON.stringify(person.attributes, null, "\t")}</pre>
+                        return <img src={"data:image/png;base64,"+person.picture}/>
+                    })
+                    }
+
+                    {this.state.people.map((person, i) => {
+                        return <pre key={i}>{JSON.stringify(person, null, "\t")}</pre>
                     })}
                 </div>
             </div>
@@ -56,7 +72,7 @@ class Setup extends Component {
     };
 
     buildPeople = () => {
-        this.api.build(this.state.instruction_list).then(res => {
+        this.api.build(this.state).then(res => {
                 this.setState({people : res});
                 console.log(res);
                 return res;

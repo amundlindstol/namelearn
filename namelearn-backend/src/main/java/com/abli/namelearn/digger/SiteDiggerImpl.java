@@ -36,12 +36,12 @@ public class SiteDiggerImpl implements SiteDigger {
 
     @Override
     public HtmlResponse findElementExact(String xPath) {
-        return buildResponse(root.get(0).getByXPath(xPath), xPath.substring(rootPath.length()));
+        return buildResponse(root.get(0).getByXPath(xPath), xPath.substring(rootPath.replaceAll("[\\[\\]1-9]", "").length()));
     }
 
     @Override
     public HtmlElement findSpecificElement(GetElementValue instruction, HtmlElement element) {
-        List<HtmlElement> elements = element.getByXPath(rootPath+instruction.getXPath());
+        List<HtmlElement> elements = element.getByXPath(element.getCanonicalXPath()+instruction.getXPath());
         if (elements.size() == 1) {
             return elements.get(0);
         }
@@ -58,7 +58,7 @@ public class SiteDiggerImpl implements SiteDigger {
         if (req.getSelectAttribute() != null && e.hasAttribute(req.getSelectAttribute())) {
             return e.getAttribute(req.getSelectAttribute());
         }
-        return e.getNodeValue();
+        return e.getFirstChild().toString();
     }
 
     @Override
