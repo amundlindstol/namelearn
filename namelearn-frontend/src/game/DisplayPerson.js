@@ -1,19 +1,24 @@
 import React, {Component} from "react";
-import Person from "../domain/Person";
 
 class DisplayPerson extends Component {
-    props = {
-        person: {} as Person,
-        hidden: false
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            person: props.person,
+            hidden: false
+        };
+    }
+
     render() {
-        const hidden = this.props.hidden ? 'hidden' : '';
-        // @ts-ignore
+        const hidden = this.state.hidden ? 'hidden' : '';
         return (
             <div>
                 <div className={hidden} >
-                    {this.props.person.fullname}
-                    {this.props.person.initial}
+                    {this.state.person !== undefined ? (
+                        <img src={"data:image/png;base64,"+this.state.person.picture}/>
+                    ) : (
+                        <div>loading</div>
+                    )}
                 </div>
                 <div>Who is this?</div>
             </div>

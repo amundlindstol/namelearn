@@ -1,35 +1,22 @@
 import React, {Component} from 'react';
 import '../css/App.css';
-import Api from "../domain/Api";
 import DisplayPerson from "./DisplayPerson";
 
-class App extends Component {
-  // hidden = true;
-  peopleFactory = new Api();
-  state = {
-    hidden: true,
-    alternatives: [],
-    users: [], //correct?
-    user: {}
-  };
-
-  //pass to this component
+class Game extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        hidden: true,
+        alternatives: [],
+        users: props.people,
+        user: {}
+    };
+  }
   componentDidMount() {
-    this.peopleFactory.browse()
-        .then(people => this.setState({
-          users: people.map((person) => person)
-        }))
-        .then(() => {
-          if (this.state.users[0] === undefined) {
-            throw Error("Failed to load users");
-          }
-        })
-        .then(() => this.newGame());
-    // new GetPictures().downloadAllImages();
+    this.newGame();
   }
 
   randomPerson() {
-    // @ts-ignore
     return this.state.users[Math.floor(Math.random() * this.state.users.length)];
   }
 
@@ -68,15 +55,15 @@ class App extends Component {
 
   displayButtons() {
     const alt = (this.state.alternatives);
-    return (<div><button onClick={() => this.click(0)}>{alt[0].fullname}</button>
-            <button onClick={() => this.click(1)}>{alt[1].fullname}</button>
-            <button onClick={() => this.click(2)}>{alt[2].fullname}</button>
-            <button onClick={() => this.click(3)}>{alt[3].fullname}</button></div>);
+    return (<div><button onClick={() => this.click(0)}>{alt[0].attributes.name}</button>
+            <button onClick={() => this.click(1)}>{alt[1].attributes.name}</button>
+            <button onClick={() => this.click(2)}>{alt[2].attributes.name}</button>
+            <button onClick={() => this.click(3)}>{alt[3].attributes.name}</button></div>);
   }
 
   click(index) {
-    console.log(this.state.alternatives[index].fullname + " - " + this.state.user.fullname);
-    if (this.state.alternatives[index].fullname === this.state.user.fullname) {
+    console.log(this.state.alternatives[index].attributes.name + " - " + this.state.user.attributes.name);
+    if (this.state.alternatives[index].attributes.name === this.state.user.attributes.name) {
       console.log("correct");
       this.setState({hidden: false});
     } else {
@@ -93,4 +80,4 @@ function shuffleList(a) {
   return a;
 }
 
-export default App;
+export default Game;

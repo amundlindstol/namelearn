@@ -14,8 +14,8 @@ class Setup extends Component {
         this.state = {
             selector_components: [],
             people : [],
-            src_prefix: '',
-            j_session_id: '',
+            src_prefix: 'https://wiki.intra.buypass.no',
+            j_session_id: '8C3CF812FAC5030A49F1881014A6593C',
             instruction_list: [{
                     name: 'name',
                     path: '/div',
@@ -45,11 +45,11 @@ class Setup extends Component {
                     <Root/>
                     <Browser/>
                     {selector_components.length !== 0 && selector_components.map((s, i) => <Select key={i} callBack={this.callbackInstructions}/>)}
-                    <input className={"submit"} type="submit" value="+" onClick={this.addSelect} />
-                    <input className={"submit"} type="submit" value="Bake" onClick={this.buildPeople} />
-
+                    <button className={"submit"} type="submit" value="+" onClick={this.addSelect}>+</button>
+                    <button className={"submit"} type="submit" value="Bake" onClick={this.buildPeople} >Bake</button>
+                    <button className={"submit"} onClick={ () => this.props.startGame(this.state.people)}>Play</button>
                     {this.state.people.map((person, i) => {
-                        return <img src={"data:image/png;base64,"+person.picture}/>
+                        return <img key={i} src={"data:image/png;base64,"+person.picture}/>
                     })
                     }
 
